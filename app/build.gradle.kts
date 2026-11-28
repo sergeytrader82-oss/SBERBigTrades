@@ -1,4 +1,7 @@
-
+import java.net.URL
+import java.security.cert.CertificateFactory
+import java.io.ByteArrayInputStream
+import java.security.cert.X509Certificate
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -51,10 +54,8 @@ val downloadTbankCertificates by tasks.registering {
         val certificates = linkedMapOf(
             "russian_trusted_root_ca.cer" to
                 "https://gu-st.ru/content/downloads/Russian_Trusted_Root_CA.cer",
-
             "russian_trusted_sub_ca.cer" to
                 "https://gu-st.ru/content/downloads/Russian_Trusted_Sub_CA.cer",
-
             "russian_trusted_sub_ca_2024.cer" to
                 "https://gu-st.ru/content/downloads/Russian_Trusted_Sub_CA_2024.cer"
         )
@@ -63,10 +64,10 @@ val downloadTbankCertificates by tasks.registering {
 
             println("Downloading: $fileName")
 
-            val connection = java.net.URL(url).openConnection().apply {
-                connectTimeout = 20000
-                readTimeout = 20000
-            }
+            val connection = URL(url).openConnection()
+
+            connection.connectTimeout = 20000
+            connection.readTimeout = 20000
 
             val bytes = connection.getInputStream().use {
                 it.readBytes()
@@ -76,12 +77,11 @@ val downloadTbankCertificates by tasks.registering {
                 "ERROR: Empty certificate: $fileName"
             }
 
-            val certificate =
-                java.security.cert.CertificateFactory
-                    .getInstance("X.509")
-                    .generateCertificate(
-                        java.io.ByteArrayInputStream(bytes)
-                    ) as java.security.cert.X509Certificate
+            val certificate = CertificateFactory
+                .getInstance("X.509")
+                .generateCertificate(
+                    ByteArrayInputStream(bytes)
+                ) as X509Certificate
 
             check(certificate.basicConstraints >= 0) {
                 "ERROR: Certificate is not a CA: $fileName"
@@ -94,7 +94,7 @@ val downloadTbankCertificates by tasks.registering {
             println("Saved: ${destination.absolutePath}")
         }
 
-        println("All T-Bank certificates downloaded and checked.")
+        println("All certificates downloaded and checked.")
     }
 }
 
