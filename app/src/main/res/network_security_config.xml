@@ -11,6 +11,7 @@
             <certificates src="system" />
             <certificates src="@raw/russian_trusted_root_ca" />
             <certificates src="@raw/russian_trusted_sub_ca" />
+            <certificates src="@raw/russian_trusted_sub_ca_2024" />
         </trust-anchors>
 
     </domain-config>
