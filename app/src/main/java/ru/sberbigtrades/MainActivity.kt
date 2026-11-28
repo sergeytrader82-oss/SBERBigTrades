@@ -47,7 +47,7 @@ suspend fun fetchTrades(token: String, figi: String): List<Trade> = withContext(
     val from = now.minusSeconds(65).toString()
     val to = now.toString()
     val payload = JSONObject().put("instrumentId", figi).put("from", from).put("to", to).toString()
-    val request = Request.Builder().url("https://invest-public-api.tinkoff.ru/rest/tinkoff.public.invest.api.v1.MarketDataService/GetLastTrades")
+    val request = Request.Builder().url("https://invest-public-api.tbank.ru/rest/tinkoff.public.invest.api.v1.MarketDataService/GetLastTrades")
         .addHeader("Authorization", "Bearer $token").addHeader("Content-Type", "application/json")
         .post(payload.toRequestBody(jsonType)).build()
     http.newCall(request).execute().use { response ->
